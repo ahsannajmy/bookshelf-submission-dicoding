@@ -55,16 +55,78 @@ export const addNewBookHandler = (request, h) => {
   }).code(201);
 };
 
-export const getAllBooksHandler = (request, h) => ({
-  status : 'success',
-  data : {
-    books : books.map((book) => ({
-      id : book.id,
-      name : book.name,
-      publisher : book.publisher
-    }))
+export const getAllBooksHandler = (request, h) => {
+  const { name, reading, finished } = request.query;
+  
+  if (name !== undefined) {
+    const bookByName = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
+    return h.response({
+      status : 'success',
+      data : {
+        books : bookByName.map((book) => ({
+          id : book.id,
+          name : book.name,
+          publisher : book.publisher
+        }))
+      }
+    }).code(200);
   }
-});
+
+  if (reading !== undefined) {
+    const bookByReading = books.filter((book) => {
+      if (reading === '0') {
+        return book.reading == '0';
+      } else if (reading === '1') {
+        return book.reading == 1;
+      }
+      return true;
+    });
+    return h.response({
+      status : 'success',
+      data : {
+        books : bookByReading.map((book) => ({
+          id : book.id,
+          name : book.name,
+          publisher : book.publisher
+        }))
+      }
+    }).code(200);
+  }
+
+  if (finished !== undefined) {
+    const bookByFinished = books.filter((book) => {
+      if (finished === '0') {
+        return book.finished == 0;
+      } else if (finished === '1') {
+        return book.finished == 1;
+      }
+      return true;
+    });
+    return h.response({
+      status : 'success',
+      data : {
+        books : bookByFinished.map((book) => ({
+          id : book.id,
+          name : book.name,
+          publisher : book.publisher
+        }))
+      }
+    }).code(200);
+  }
+
+  
+
+  return h.response({
+    status : 'success',
+    data : {
+      books : books.map((book) => ({
+        id : book.id,
+        name : book.name,
+        publisher : book.publisher
+      }))
+    }
+  })
+};
 
 export const getBookByIdHandler = (request, h) => {
   const { bookId } = request.params;

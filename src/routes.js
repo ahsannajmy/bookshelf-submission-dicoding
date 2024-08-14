@@ -3,7 +3,7 @@ import {
   deleteBookByIdHandler, 
   editBookByIdHandler, 
   getAllBooksHandler, 
-  getBookByIdHandler 
+  getBookByIdHandler, 
 } from "./handler.js";
 
 export const routes = [
